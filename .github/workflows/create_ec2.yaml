@@ -21,5 +21,4 @@ jobs:
           aws ec2 run-instances \
             --image-id ami-123456789012 \
             --instance-type t2.micro \
-            --vpc-id vpc-05d02b24334d76cbe \
             --security-group-ids sg-0e2c4f83cb6112721 
