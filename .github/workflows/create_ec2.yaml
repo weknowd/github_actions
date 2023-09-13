@@ -19,6 +19,6 @@ jobs:
       - name: Create EC2 Instance
         run: |
           aws ec2 run-instances \
-            --image-id ami-123456789012 \
+            --image-id ami-04cb4ca688797756f \
             --instance-type t2.micro \
             --security-group-ids sg-0e2c4f83cb6112721 
