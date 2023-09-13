@@ -26,4 +26,5 @@ jobs:
           aws ec2 run-instances \
             --image-id ami-04cb4ca688797756f \
             --instance-type t2.micro \
-            --security-group-ids sg-0e2c4f83cb6112721 
+            --security-group-ids sg-0e2c4f83cb6112721 \
+            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development}]'
