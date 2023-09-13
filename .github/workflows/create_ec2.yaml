@@ -18,7 +18,7 @@ jobs:
 
       - name: Create EC2 Instance
         run: |
-          aws ec2 create-instances \
+          aws ec2 run-instances \
             --image-id ami-123456789012 \
             --instance-type t2.micro \
             --vpc-id vpc-05d02b24334d76cbe \
