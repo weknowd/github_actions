@@ -9,8 +9,8 @@ jobs:
   create-ec2-instance:
     runs-on: ubuntu-latest
     steps:
-      - name: Assume IAM Role
-        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: actions/checkout@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -18,7 +18,7 @@ jobs:
 
       - name: Create EC2 Instance
         run: |
-          aws ec2 run-instances \
+          aws ec2 create-instances \
             --image-id ami-123456789012 \
             --instance-type t2.micro \
             --vpc-id vpc-05d02b24334d76cbe \
