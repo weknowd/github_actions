@@ -32,10 +32,12 @@ jobs:
             --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development1}]'	
       - name: get EC2 Instance ID
         if: ${{ vars.ACTION == 'stop' }}
+        with:
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text)
-          echo $instance_ids
+          echo $instance_id
       - name: Stop EC2 instance
         if: ${{ vars.ACTION == 'stop' }}
+        with:
         run: |
           aws ec2 stop-instances --instance-ids $instance_id
