@@ -35,7 +35,8 @@ jobs:
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo $instance_id
+          echo "::set-output name=instance_id::$instance_id"  
       - name: Stop EC2 instance
         if: ${{ vars.ACTION == 'stop' }}
         run: |
-          aws ec2 stop-instances --instance-ids aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text
+          aws ec2 stop-instances --instance-ids ${{ steps.get-ec2-instance-id.outputs.instance_id }}
