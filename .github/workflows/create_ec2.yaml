@@ -29,7 +29,7 @@ jobs:
             --instance-type t2.micro \
             --subnet-id ${{ vars.SUBNET_ID }} \
             --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
-            --iam-instance-profile-arn 'arn:aws:iam::083314485101:instance-profile/vinoth-ec2-role' \
+            --iam-instance-profile Name=vinoth-ec2-role \
             --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development1}]'	
       - name: get EC2 Instance ID
         if: ${{ vars.ACTION == 'stop' }}
