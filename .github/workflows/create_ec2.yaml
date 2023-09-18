@@ -22,7 +22,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Create EC2 Instance
-        if: ${{ vars.ACTION == 'start' }}
+        if: ${{ vars.ACTION == 'create' }}
         run: |
           aws ec2 run-instances \
             --image-id ami-04cb4ca688797756f \
@@ -33,8 +33,9 @@ jobs:
       - name: get EC2 Instance ID
         if: ${{ vars.ACTION == 'stop' }}
         run: |
-          instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=test --query 'Reservations[*].Instances[*].InstanceId' --output text)
+          instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo $instance_id
       - name: Stop EC2 instance
+        if: ${{ vars.ACTION == 'stop' }}
         run: |
           aws ec2 stop-instances --instance-ids $instance_id
