@@ -41,3 +41,7 @@ jobs:
         run: |
           instance_id="${{ steps.get-instance-id.outputs.instance_id }}"
           aws ec2 stop-instances --instance-ids $instance_id
+        if: ${{ vars.ACTION == 'terminate' }}
+        run: |
+          instance_id="${{ steps.get-instance-id.outputs.instance_id }}"
+          aws ec2 terminate-instances --instance-ids $instance_id
