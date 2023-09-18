@@ -38,4 +38,5 @@ jobs:
       - name: Stop EC2 instance
         if: ${{ vars.ACTION == 'stop' }}
         run: |
+          echo $instance_id
           aws ec2 stop-instances --instance-ids $instance_id
