@@ -27,7 +27,7 @@ jobs:
           aws ec2 run-instances \
             --image-id ami-04cb4ca688797756f \
             --instance-type t2.micro \
-            --subnet-id ${{ vars.SUBNET_ID }}
+            --subnet-id ${{ vars.SUBNET_ID }} \
             --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
             --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development}]'	
 
