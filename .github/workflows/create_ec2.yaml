@@ -21,10 +21,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Create EC2 Instance
+        if: ${{ vars.ACTION == 'start' }}
+        run: |
+          aws ec2 run-instances \
+            --image-id ami-04cb4ca688797756f \
+            --instance-type t2.micro \
+            --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
+            --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":20,"VolumeType":"gp2"}}]'
+            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development}]'	
+
       - name: get EC2 Instance ID
         if: ${{ vars.ACTION == 'stop' }}
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=test --query 'Reservations[*].Instances[*].InstanceId' --output text)
+          echo $instance_id
       - name: Stop EC2 instance
         run: |
           aws ec2 stop-instances --instance-ids $instance_id
