@@ -31,13 +31,13 @@ jobs:
             --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
             --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development1}]'	
       - name: get EC2 Instance ID
-        with:
         if: ${{ vars.ACTION == 'stop' }}
+        with:
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo $instance_ids
       - name: Stop EC2 instance
-        with:
         if: ${{ vars.ACTION == 'stop' }}
+        with:
         run: |
-          aws ec2 stop-instances --instance-ids ${{ instance_id }}
+          aws ec2 stop-instances --instance-ids $instance_id
