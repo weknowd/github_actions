@@ -21,23 +21,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Create EC2 Instance
-        if: ${{ vars.ACTION == 'create' }}
+    - name: Create EC2 Instance
+      if: ${{ vars.ACTION == 'create' }}
+      run: |
+        aws ec2 run-instances \
+          --image-id ami-04cb4ca688797756f \
+          --instance-type t2.micro \
+          --subnet-id ${{ vars.SUBNET_ID }} \
+          --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
+          --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development1}]'	
+    - name: get EC2 Instance ID
+      if: ${{ vars.ACTION == 'stop' }}
+      with:
         run: |
-          aws ec2 run-instances \
-            --image-id ami-04cb4ca688797756f \
-            --instance-type t2.micro \
-            --subnet-id ${{ vars.SUBNET_ID }} \
-            --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development1}]'	
-      - name: get EC2 Instance ID
-        if: ${{ vars.ACTION == 'stop' }}
-        with:
-          run: |
-            instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text)
-            echo $instance_id
-      - name: Stop EC2 instance
-        if: ${{ vars.ACTION == 'stop' }}
-        with:
-          run: |
-            aws ec2 stop-instances --instance-ids $instance_id
+          instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=development1 --query 'Reservations[*].Instances[*].InstanceId' --output text)
+          echo $instance_id
+    - name: Stop EC2 instance
+      if: ${{ vars.ACTION == 'stop' }}
+      with:
+        run: |
+          aws ec2 stop-instances --instance-ids ${{ steps.get-ec2-instance-id.outputs.instance_id }}
