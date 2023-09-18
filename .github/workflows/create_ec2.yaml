@@ -22,9 +22,6 @@ jobs:
           aws-region: us-east-1
 
       - name: Create EC2 Instance
+        if: ${{ variable.ACTION == 'stop' }}
         run: |
-          aws ec2 run-instances \
-            --image-id ami-04cb4ca688797756f \
-            --instance-type t2.micro \
-            --security-group-ids sg-0e2c4f83cb6112721 \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=development}]'
+          aws ec2 stop-instances --filters Name=tag:Name,Values=test 
