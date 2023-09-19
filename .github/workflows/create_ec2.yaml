@@ -54,14 +54,15 @@ jobs:
           instance_id="${{ steps.get-terminate-instance-id.outputs.instance_id }}"
           aws ec2 terminate-instances --instance-ids $instance_id
                 - name: get EC2 Instance ID
+      - name: get EC2 instance ID
         if: ${{ vars.ACTION == 'start' }}
-        id: get-start-instance-id
+        id: get-stopped-instance-id
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=dev-test --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo "::set-output name=instance_id::$instance_id"
-      - name: Terminate EC2 instance
+      - name: start the stopped EC2 instance
         if: ${{ vars.ACTION == 'start' }}
         run: |
-          instance_id="${{ steps.get-start-instance-id.outputs.instance_id }}"
+          instance_id="${{ steps.get-stopped-instance-id.outputs.instance_id }}"
           aws ec2 start-instances --instance-ids $instance_id
           
