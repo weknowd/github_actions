@@ -22,46 +22,46 @@ jobs:
           aws-region: us-east-1
 
       - name: Create EC2 Instance
-        if: ${{ vars.ACTION == 'create' }}
+        if: ${{ env.ACTION == 'create' }}
         run: |
           aws ec2 run-instances \
             --image-id ami-04cb4ca688797756f \
             --instance-type t2.micro \
-            --subnet-id ${{ vars.SUBNET_ID }} \
-            --security-group-ids ${{ vars.SECURITY_GROUP_ID }} \
+            --subnet-id ${{ env.SUBNET_ID }} \
+            --security-group-ids ${{ env.SECURITY_GROUP_ID }} \
             --iam-instance-profile Name=vinoth-ec2-role \
             --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=dev-test}]'	
       - name: get EC2 Instance ID
-        if: ${{ vars.ACTION == 'stop' }}
+        if: ${{ env.ACTION == 'stop' }}
         id: get-instance-id
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=dev-test --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo "::set-output name=instance_id::$instance_id"
       - name: Stop EC2 instance
-        if: ${{ vars.ACTION == 'stop' }}
+        if: ${{ env.ACTION == 'stop' }}
         run: |
           instance_id="${{ steps.get-instance-id.outputs.instance_id }}"
           aws ec2 stop-instances --instance-ids $instance_id
       - name: get EC2 Instance ID
-        if: ${{ vars.ACTION == 'terminate' }}
+        if: ${{ env.ACTION == 'terminate' }}
         id: get-terminate-instance-id
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=dev-test --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo "::set-output name=instance_id::$instance_id"
       - name: Terminate EC2 instance
-        if: ${{ vars.ACTION == 'terminate' }}
+        if: ${{ env.ACTION == 'terminate' }}
         run: |
           instance_id="${{ steps.get-terminate-instance-id.outputs.instance_id }}"
           aws ec2 terminate-instances --instance-ids $instance_id
                 - name: get EC2 Instance ID
       - name: get EC2 instance ID
-        if: ${{ vars.ACTION == 'start' }}
+        if: ${{ env.ACTION == 'start' }}
         id: get-stopped-instance-id
         run: |
           instance_id=$(aws ec2 describe-instances --filters Name=tag:Name,Values=dev-test --query 'Reservations[*].Instances[*].InstanceId' --output text)
           echo "::set-output name=instance_id::$instance_id"
       - name: start the stopped EC2 instance
-        if: ${{ vars.ACTION == 'start' }}
+        if: ${{ env.ACTION == 'start' }}
         run: |
           instance_id="${{ steps.get-stopped-instance-id.outputs.instance_id }}"
           aws ec2 start-instances --instance-ids $instance_id
