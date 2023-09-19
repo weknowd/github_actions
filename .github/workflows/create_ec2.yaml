@@ -9,6 +9,8 @@ jobs:
   create-ec2-instance:
     runs-on: ubuntu-latest
     steps:
+      - name: Source .env file
+        run: source .env
       # Checkout code from git repo branch configure above
       - name: Checkout
         uses: actions/checkout@v2
