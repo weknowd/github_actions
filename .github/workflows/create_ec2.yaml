@@ -66,4 +66,3 @@ jobs:
           instance_id="${{ steps.get-stopped-instance-id.outputs.instance_id }}"
           aws ec2 start-instances --instance-ids $instance_id
           
-          
